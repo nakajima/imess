@@ -6,6 +6,8 @@ class Messager < Sinatra::Application
   end
 
   post '/messages' do
+    puts "receiving a message...."
+    p params
     system "osascript", "message.applescript", params[:phone], params[:message]
     sleep 1
     system "screencapture -l$(osascript -e 'tell app \"Messages\" to id of window 1') /tmp/test.png"
