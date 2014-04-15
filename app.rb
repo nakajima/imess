@@ -7,15 +7,13 @@ class Messager < Sinatra::Application
 
   post '/messages' do
     system "osascript", "message.applescript", params[:phone], params[:message]
-    sleep 2
+    sleep 1
     system "screencapture -l$(osascript -e 'tell app \"Messages\" to id of window 1') /tmp/test.png"
     pixel_info1=`convert /tmp/test.png -crop '1x1+296+484' txt:-`
-    #pixel_info2=`convert /tmp/test.png -crop '1x1+200+110' txt:-`
     puts pixel_info1
-    #puts pixel_info2
     if !(pixel_info1 =~ /#A1A2C3 /)
-      system "osascript -e 'tell application \"Messages\" keystroke return'"
-      raise "failed :("
+      system "osascript -e 'tell application \"System Events\" to tell process \"Messages\" to keystroke return'"
+      raise "failed to send imessage"
     end
   end
 end
